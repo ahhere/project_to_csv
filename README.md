@@ -18,8 +18,7 @@ python3 --version
 ```
 
 ### 2. Virtual Environment
-This project includes a virtual environment named `my-venv` with all the necessary dependencies pre-installed.
-
+It is recommended that you run this script in a virtual environment and install the dependencies in requirements.txt inside that environment.
 ---
 
 ## Setting Up the Environment
