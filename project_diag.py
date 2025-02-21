@@ -2,9 +2,24 @@ import requests
 import csv
 import os
 import json
+import subprocess
+
+def run_traceroute(api_url):
+    """Run network diagnostics using traceroute."""
+    print(f"Running traceroute for {api_url}...")
+    try:
+        host = api_url.split("//")[-1].split("/")[0]
+        result = subprocess.run(["traceroute", host], capture_output=True, text=True, check=True)
+        print("Traceroute results:\n", result.stdout)
+    except FileNotFoundError:
+        print("Traceroute command is not available on this system.")
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred while running traceroute: {e}")
+    except Exception as e:
+        print(f"Unexpected error during traceroute: {e}")
 
 def fetch_api_data(url, method="GET", headers=None, params=None, body=None):
-    """Fetch data from the Braintrust API with error handling."""
+    """Fetch data from the Braintrust API with error handling and network diagnostics."""
     try:
         if method == "GET":
             response = requests.get(url, headers=headers, params=params, timeout=10)
@@ -26,8 +41,13 @@ def fetch_api_data(url, method="GET", headers=None, params=None, body=None):
         else:
             return response.json()
             
+    except requests.exceptions.Timeout:
+        print(f"Request to {url} timed out.")
+        run_traceroute(url)
+        return None
     except requests.exceptions.RequestException as e:
         print(f"API request error: {e}")
+        run_traceroute(url)
         return None
     except json.JSONDecodeError as e:
         print(f"JSON parsing error: {e}")
