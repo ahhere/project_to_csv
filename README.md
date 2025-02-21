@@ -1,7 +1,7 @@
 # README
 
 ## Overview
-This script is designed to interact with the BrainTrust API. It fetches datasets and experiments for a specific project and saves each result into its own CSV file.
+This script interacts with the BrainTrust API to fetch both metadata and data content from datasets and experiments. For each dataset, it retrieves both the dataset metadata and its actual data content using BTQL queries. For experiments, it retrieves the experiment metadata. All results are organized in a clear directory structure and saved as CSV files.
 
 ---
 
@@ -90,16 +90,34 @@ Example:
 Enter the project ID: 5464d38b-037d-4714-aedc-6ccd18bd27b5
 ```
 
-5. After execution, CSV files for the datasets and experiments will be saved in the same directory as the script.
+5. The script will create an organized directory structure and save all files within it.
 
 ---
 
 ## Output
-Each dataset and experiment will be saved to its own CSV file, named based on its `name` field. Spaces in names will be replaced with underscores (`_`).
+The script creates an organized directory structure for all exported files:
 
-Example file names:
-- `Prompt_A_(gpt-4o)_dataset.csv`
-- `Prompt_B_(gpt-4o)_experiment.csv`
+```
+exports/
+└── project_id/
+    ├── datasets/
+    │   ├── dataset1_metadata.csv  # Dataset configuration and metadata
+    │   ├── dataset1_data.csv      # Actual dataset contents
+    │   ├── dataset2_metadata.csv
+    │   └── dataset2_data.csv
+    └── experiments/
+        ├── experiment1.csv        # Experiment metadata
+        └── experiment2.csv
+```
+
+For each dataset, two files are created:
+- `dataset_name_metadata.csv`: Contains dataset configuration and metadata
+- `dataset_name_data.csv`: Contains the actual dataset records
+
+For each experiment:
+- `experiment_name.csv`: Contains experiment metadata
+
+All spaces and special characters in names are replaced with underscores (`_`) for file compatibility.
 
 ---
 
@@ -122,9 +140,15 @@ Example file names:
      ```
 
 3. **Permission Denied**:
-   - Check your file permissions in the directory where the script is run.
+   - Check your file permissions in the export directory.
 
-### Debugging Network Errors
-If the script encounters a timeout or network issue, it will attempt to run a traceroute to diagnose connectivity issues.
+4. **BTQL Query Errors**:
+   - If you encounter errors with dataset data retrieval, check that:
+     - The dataset contains data
+     - Your API key has appropriate permissions
+     - The dataset ID is valid
 
-
+### Data Processing Notes
+- Large datasets are retrieved in batches of 100 records
+- The script handles pagination automatically
+- All JSON and list fields are properly escaped in the CSV output
