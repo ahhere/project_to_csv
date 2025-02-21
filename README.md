@@ -3,6 +3,29 @@
 ## Overview
 This script interacts with the BrainTrust API to fetch both metadata and data content from datasets and experiments. For each dataset, it retrieves both the dataset metadata and its actual data content using BTQL queries. For experiments, it retrieves the experiment metadata. All results are organized in a clear directory structure and saved as CSV files.
 
+
+### Network Diagnostics
+The script includes automatic network diagnostics capabilities:
+
+1. **Automatic Traceroute**:
+   - If an API request times out or fails
+   - If there are connectivity issues
+   - The script will automatically run a traceroute to the API endpoint
+
+2. **Timeout Handling**:
+   - API requests timeout after 10 seconds
+   - Upon timeout, network diagnostics are automatically triggered
+   - Results are displayed in the console
+
+Example traceroute output:
+```bash
+API request error: HTTPSConnectionPool(host='api.braintrust.dev', port=443): Read timed out
+Running traceroute for api.braintrust.dev...
+traceroute to api.braintrust.dev (123.45.67.89), 30 hops max, 60 byte packets
+ 1  router.local  (192.168.1.1)  1.123 ms  1.234 ms  1.345 ms
+ 2  isp-gateway  (10.0.0.1)  12.345 ms  12.456 ms  12.567 ms
+...
+
 ---
 
 ## Prerequisites
